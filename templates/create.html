@@ -2,11 +2,11 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Главная :: Доска объявлений</title>
+    <title>Добавление объявления :: Доска объявлений</title>
 </head>
 <body>
 
-    <h1>Объявления</h1>
+    <h1>Добавление объявления</h1>
 
     <div>
         <a href="{% url 'bboard:index' %}">Главная</a>
@@ -16,13 +16,11 @@
         {% endfor %}
     </div>
 
-    {% for bb in bbs %}
-        <div>
-            <h2>{{ bb.title }}</h2>
-            <p>{{ bb.content }}</p>
-            <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
-        </div>
-    {% endfor %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Добавить</button>
+    </form>
 
 </body>
 </html>
