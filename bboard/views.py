@@ -7,6 +7,7 @@ from bboard.forms import BbForm
 from bboard.models import Bb, Rubric
 
 
+
 # def index(request):
 #     s = 'Список объявлений\r\n\r\n\r\n'
 #
@@ -29,6 +30,16 @@ def index(request):
     context = {'bbs': bbs}
 
     return render(request, 'index.html', context)
+
+def by_rubric(request, rubric_id):
+    bbs = Bb.objects.filter(rubric=rubric_id)
+    rubrics = Rubric.objects.all()
+    current_rubric = Rubric.objects.get(pk=rubric_id)
+
+    context = {'bbs': bbs, 'rubrics': rubrics,
+               'current_rubric': current_rubric}
+
+    return render(request, 'by_rubric.html', context)
 
 class BbCreateView(CreateView):
     template_name = 'create.html'
