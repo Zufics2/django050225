@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+
 from bboard.models import Bb
 
 class BbForm(ModelForm):

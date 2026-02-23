@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('<int:rubric_id>/', include('bboard.urls')),
+    path('', include('bboard.urls', namespace='bboard')),
+
     path('admin/', admin.site.urls),
 ]
