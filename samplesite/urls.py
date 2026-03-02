@@ -19,6 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include('bboard.urls', namespace='bboard')),
+    path('bboard/', include('bboard.urls', namespace='other-bboard')),
 
     path('admin/', admin.site.urls),
 ]

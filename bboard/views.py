@@ -41,6 +41,8 @@ def by_rubric(request, rubric_id):
     context = {'bbs': bbs, 'rubrics': rubrics,
                'current_rubric': current_rubric}
 
+    # url = reverse('by_rubric', kwargs={'rubric_id': 2})
+
     return render(request, 'by_rubric.html', context)
 
 
