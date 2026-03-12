@@ -11,6 +11,7 @@ from django.views.generic.base import View, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView
+from django.contrib.auth.models import User
 
 from bboard.forms import BbForm
 from bboard.models import Bb, Rubric
@@ -210,6 +211,15 @@ def logging_check(request):
 
 def no_login(request):
     return HttpResponse("Нет логина")
+
+#PR 12.03.26
+class FirstUserView(TemplateView):
+    template_name = 'first_user.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['first_user'] = User.objects.first()
+        return context
 
 # def bb_detail(request, bb_id):
 #     bb = Bb.objects.get(pk=bb_id)

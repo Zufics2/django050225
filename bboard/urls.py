@@ -4,7 +4,7 @@ from django.views.generic import CreateView
 from bboard.models import Bb
 
 from bboard.views import (by_rubric, BbCreateView, add, add_save, add_and_save, bb_detail, logging_check, no_login,
-                          BbRubricBbsView, IndexView, BbDetailView, BbDeleteView)
+                          BbRubricBbsView, IndexView, BbDetailView, BbDeleteView, FirstUserView)
 
 app_name = 'bboard'
 
@@ -28,7 +28,10 @@ urlpatterns = [
 
 
     # path('', index, name='index'),
-    path('', IndexView.as_view(), name='index')
+    path('', IndexView.as_view(), name='index'),
+
+    #PR 12.03.26
+    path('user/', FirstUserView.as_view(), name='first_user')
 
     #dz
 
