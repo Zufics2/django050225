@@ -1,24 +1,34 @@
 from django.urls import path
 from django.urls import re_path
+from django.views.generic import CreateView
+from bboard.models import Bb
 
-from bboard.views import (index, by_rubric, BbCreateView, add, add_save, add_and_save, bb_detail, logging_check, no_login)
+from bboard.views import (by_rubric, BbCreateView, add, add_save, add_and_save, bb_detail, logging_check, no_login,
+                          BbRubricBbsView, IndexView, BbDetailView, BbDeleteView)
 
 app_name = 'bboard'
 
 urlpatterns = [
-    # path('add/', BbCreateView.as_view(), name='add'),
+    path('add/', BbCreateView.as_view(), name='add'),
 
     # path('add/', add, name='add'),
     # path('add/save/', add_save, name='add_save'),
-    path('add/', add_and_save, name='add'),
+    # path('add/', add_and_save, name='add'),
+    # path('add/', CreateView.as_view(model=Bb, template_name='create.html', fields='__all__'),name='add'),
 
-    path('rubric/<int:rubric_id>/', by_rubric, name='by_rubric'),
-    path('bb/<int:bb_id>/', bb_detail, name='bb_detail'),
+    # path('rubric/<int:rubric_id>/', by_rubric, name='by_rubric'),
+    path('rubric/<int:rubric_id>/', BbRubricBbsView.as_view(), name='by_rubric'),
+    # path('bb/<int:bb_id>/', bb_detail, name='bb_detail'),
+    path('bb/<int:pk>/', BbDetailView.as_view(), name='bb_detail'),
+
+    path('bb/delete/<int:pk>/', BbDeleteView.as_view(), name='bb_delete'),
+
     path('logging/', logging_check, name='logging_check'),
     path('no_login/', no_login, name='no_login'),
 
 
-    path('', index, name='index'),
+    # path('', index, name='index'),
+    path('', IndexView.as_view(), name='index')
 
     #dz
 
