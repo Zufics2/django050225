@@ -1,0 +1,12 @@
+Path: /logging/
+Method: GET
+GET: <QueryDict: {'login': ['admin']}>
+POST: <QueryDict: {}>
+Path: /logging/
+Method: GET
+GET: <QueryDict: {'login': ['admin']}>
+POST: <QueryDict: {}>
+Path: /logging/
+Method: GET
+GET: <QueryDict: {'login': ['admin']}>
+POST: <QueryDict: {}>
