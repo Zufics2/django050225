@@ -12,20 +12,16 @@
         <h1>Объявления</h1>
     </header>
 
-    <nav>
-        <div>
-            <a href="{% url 'bboard:index' %}">Главная</a>
-            <a href="{% url 'bboard:add' %}">Добавить</a>
-            {% for rubric in rubrics %}
-                <a href="{% url 'bboard:by_rubric' rubric.pk %}">{{ rubric.name }}</a>
-            {% endfor %}
-        </div>
-    </nav>
+    {% include 'inc/main_menu.html' %}
 
     <section>
         {% block content %}
         {% endblock %}
     </section>
+
+    {% comment %}
+    <footer>{% now 'd.M.Y' %}</footer>
+    {% endcomment %}
 
 </body>
 </html>

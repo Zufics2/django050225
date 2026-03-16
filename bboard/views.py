@@ -16,6 +16,9 @@ from django.contrib.auth.models import User
 from bboard.forms import BbForm
 from bboard.models import Bb, Rubric
 
+from .models import Task
+from .forms import TaskForm
+
 # def index(request):
 #     resp = HttpResponse('Здесь будет', content_type='text/plain; charset=utf-8')
 #     resp.write(' главная')
@@ -243,3 +246,37 @@ class FirstUserView(TemplateView):
 # def sms_list(request):
 #     sms_list = SMS.objects.all().order_by("-id")
 #     return render(request, "templates/sms_list.html", {"sms_list": sms_list})
+
+#LIST ZADACH
+def index(request):
+    tasks = Task.objects.all()[:5]
+    return render(request, 'tasks/index.html', {'tasks': tasks})
+
+def task_list(request):
+    tasks = Task.objects.all()
+    return render(request, 'tasks/task_list.html', {'tasks': tasks})
+
+def task_detail(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    return render(request, 'tasks/task_detail.html', {'task':task})
+
+def task_create(request):
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('tasks:task_list')
+        else:
+            form = TaskForm()
+        return render(request, 'tasks/task_create.html', {'form':form})
+
+def task_update(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect('tasks:task_detail', pk=task.pk)
+        else:
+            form = TaskForm(instance=task)
+        return render(request, 'tasks/task_update.html', {'form':form, 'task': task})

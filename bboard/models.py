@@ -1,6 +1,7 @@
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse
 
 
 def validate_even(val):
@@ -136,3 +137,22 @@ class Bb(models.Model):
         verbose_name_plural = 'Объявления'
         ordering = ['-published', 'title']
         # get_latest_by = ['edited', 'published']
+
+# DZ LIST ZADACH
+class Task(models.Model):
+    title = models.CharField('Название', max_length=200)
+    description = models.TextField('Описание', blank=True)
+    is_done = models.BooleanField('Выполнено', default=False)
+    priority = models.IntegerField('Приоритет', default=1)
+    created_at = models.DateTimeField('Создано', auto_now_add=True)
+
+    class Meta:
+        ordering = ['is_done', '-priority', '-created_at']
+        verbose_name = 'Задача'
+        verbose_name_plural = 'Задачи'
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('tasks:task_detail', kwargs={'pk':self.pk})
