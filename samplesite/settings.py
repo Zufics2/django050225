@@ -59,6 +59,7 @@ ROOT_URLCONF = 'samplesite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # 'BACKEND': 'django.template.backends.jinja2.Jinja2',
         'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -123,3 +124,5 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+STATIC_ROOT = None

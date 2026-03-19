@@ -5,13 +5,13 @@ header h1 {
     background: url("../img/bg.jpg") left / auto 100% no-repeat;
 }
 
-nav {
+.main_menu {
     font-size: 16px;
     width: 150px;
     float: left;
 }
 
-nav a {
+.main_menu a {
     display: block;
     margin: 10px;
 }
