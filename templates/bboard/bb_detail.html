@@ -1,0 +1,19 @@
+{% extends "layout/basic.html" %}
+{% load static %}
+
+{% block title %}{{ bb.title }}{% endblock %}
+
+{% block content %}
+      <div>
+          <p>Рубрика: {{ bb.rubric.name }}</p>
+          <h2>{{ bb.title_and_price }}</h2>
+          <p>{{ bb.content }}</p>
+          <p>Цена: {{ bb.price }} тг.</p>
+          <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
+          <button type="button"><a href="{% url 'bboard:bb_delete' bb.pk %}">Удалить</a></button>
+
+          <p><img src="{% static 'img/bg.jpg' %}" style="width: 300px;"></p>
+
+          <p>{% lorem 2 %}</p>
+      </div>
+{% endblock %}

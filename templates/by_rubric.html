@@ -1,0 +1,73 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}{{ current_rubric.name }}{% endblock %}
+
+{% block content %}
+
+    {# {{ block.super }} #}
+
+    <h2>Рубрика: {{ current_rubric.name }}</h2>
+
+    {% for bb in bbs %}
+        <div>
+            {% if forloop.first %}
+            <h2 style="font-size: 48px;">{{ forloop.revcounter }}.
+                <a href="{% url 'bboard:bb_detail' bb.pk %}">{{ bb.title_and_price }}</a></h2>
+            {% elif forloop.last %}
+            <h2 style="color: red;">{{ forloop.revcounter }}.
+                <a href="{% url 'bboard:bb_detail' bb.pk %}">{{ bb.title_and_price }}</a></h2>
+            {% else %}
+            <h2>{{ forloop.revcounter }}.
+                <a href="{% url 'bboard:bb_detail' bb.pk %}">{{ bb.title_and_price }}</a></h2>
+            {% endif %}
+            <p>{{ bb.content }}</p>
+            <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
+
+            {% ifchanged %}
+                <p>Рубрика: {{ bb.rubric.name }}</p>
+            {% else %}
+                <p>Смотри выше</p>
+            {% endifchanged %}
+
+        </div>
+    {% empty %}
+        <h2>Записей нет</h2>
+    {% endfor %}
+    {% if is_paginated %}
+        <nav aria-label="Rubric pagination">
+            <ul class="pagination justify-content center">
+                {% if page.has_previous %}
+                    <li class="page-item">
+                        <a href="?page={{ page.previous_page_number }}">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                {% endif %}
+
+                {% for p in paginator.page_range %}
+                    {% if p == page.number %}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">{{ p }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a href="?page={{ p }}" class="page-link">{{ p }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page.has_next %}
+                    <li class="page-item">
+                        <a href="?page={{ page.next_page_number }}" class="page-link">Next</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endblock %}
