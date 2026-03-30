@@ -12,12 +12,35 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 
 from bboard.forms import BbForm
 from bboard.models import Bb, Rubric
 
 from .models import Task
-from .forms import TaskForm
+from .serializers import RubricSerializer, UserSerializer
+
+
+# from .forms import TaskForm
+
+def index(request):
+    bbs = Bb.objects.order_by('-published')
+    rubrics = Rubric.objects.annotate(cnt=Count('bb')).filter(cnt__gt=0)
+
+    paginator = Paginator(bbs, 2)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+
+    context = {'rubrics': rubrics, 'page': page, 'bbs': page.object_list}
+
+    return render(request, 'index.html', context)
 
 # def index(request):
 #     resp = HttpResponse('Здесь будет', content_type='text/plain; charset=utf-8')
@@ -181,9 +204,10 @@ class BbDetailView(DetailView):
 class BbRubricBbsView(ListView):
     template_name = 'by_rubric.html'
     context_object_name = 'bbs'
+    paginate_by = 2
 
     def get_queryset(self):
-        return Bb.objects.filter(rubric=self.kwargs['rubric_id'])
+        return Bb.objects.filter(rubric=self.kwargs['rubric_id']).order_by('-published')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -199,6 +223,50 @@ class BbDeleteView(DeleteView):
         context = super().get_context_data(**kwargs)
         context['rubrics'] = Rubric.objects.annotate(cnt=Count('bb')).filter(cnt__gt=0)
         return context
+
+### DRF ###
+@api_view(['GET', 'POST'])
+def api_rubric(request):
+    if request.method == 'GET':
+        rubrics = Rubric.objects.all()
+        serializer = RubricSerializer(rubrics, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = RubricSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+def api_rubric_detail(request, pk):
+    rubric = Rubric.objects.get(pk=pk)
+
+    if request.method == 'GET':
+        serializer = RubricSerializer(rubric)
+        return Response(serializer.data)
+
+    elif request.method in ['PUT', 'PATCH']:
+        serializer = RubricSerializer(rubric, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        rubric.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+#PR 30.03.26
+@api_view(['POST'])
+def api_create_user(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #PR 05.03.26
 def logging_check(request):
@@ -248,35 +316,35 @@ class FirstUserView(TemplateView):
 #     return render(request, "templates/sms_list.html", {"sms_list": sms_list})
 
 #LIST ZADACH
-def index(request):
-    tasks = Task.objects.all()[:5]
-    return render(request, 'tasks/index.html', {'tasks': tasks})
-
-def task_list(request):
-    tasks = Task.objects.all()
-    return render(request, 'tasks/task_list.html', {'tasks': tasks})
-
-def task_detail(request, pk):
-    task = get_object_or_404(Task, pk=pk)
-    return render(request, 'tasks/task_detail.html', {'task':task})
-
-def task_create(request):
-    if request.method == 'POST':
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('tasks:task_list')
-        else:
-            form = TaskForm()
-        return render(request, 'tasks/task_create.html', {'form':form})
-
-def task_update(request, pk):
-    task = get_object_or_404(Task, pk=pk)
-    if request.method == 'POST':
-        form = TaskForm(request.POST, instance=task)
-        if form.is_valid():
-            form.save()
-            return redirect('tasks:task_detail', pk=task.pk)
-        else:
-            form = TaskForm(instance=task)
-        return render(request, 'tasks/task_update.html', {'form':form, 'task': task})
+# def index(request):
+#     tasks = Task.objects.all()[:5]
+#     return render(request, 'tasks/index.html', {'tasks': tasks})
+#
+# def task_list(request):
+#     tasks = Task.objects.all()
+#     return render(request, 'tasks/task_list.html', {'tasks': tasks})
+#
+# def task_detail(request, pk):
+#     task = get_object_or_404(Task, pk=pk)
+#     return render(request, 'tasks/task_detail.html', {'task':task})
+#
+# def task_create(request):
+#     if request.method == 'POST':
+#         form = TaskForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('tasks:task_list')
+#         else:
+#             form = TaskForm()
+#         return render(request, 'tasks/task_create.html', {'form':form})
+#
+# def task_update(request, pk):
+#     task = get_object_or_404(Task, pk=pk)
+#     if request.method == 'POST':
+#         form = TaskForm(request.POST, instance=task)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('tasks:task_detail', pk=task.pk)
+#         else:
+#             form = TaskForm(instance=task)
+#         return render(request, 'tasks/task_update.html', {'form':form, 'task': task})

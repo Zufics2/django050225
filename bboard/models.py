@@ -122,37 +122,37 @@ class Bb(models.Model):
     def __str__(self):
         return self.title
 
-    #dz
-    class Task(models.Model):
-        title = models.CharField(max_length=255)
-        description = models.TextField(blank=True)
-        completed = models.BooleanField(default=False)
-        created_at = models.DateTimeField(auto_now_add=True)
-
-        def __str__(self):
-            return self.title
-
     class Meta:
         verbose_name = 'Объявление'
         verbose_name_plural = 'Объявления'
         ordering = ['-published', 'title']
         # get_latest_by = ['edited', 'published']
 
-# DZ LIST ZADACH
+    #dz
 class Task(models.Model):
-    title = models.CharField('Название', max_length=200)
-    description = models.TextField('Описание', blank=True)
-    is_done = models.BooleanField('Выполнено', default=False)
-    priority = models.IntegerField('Приоритет', default=1)
-    created_at = models.DateTimeField('Создано', auto_now_add=True)
-
-    class Meta:
-        ordering = ['is_done', '-priority', '-created_at']
-        verbose_name = 'Задача'
-        verbose_name_plural = 'Задачи'
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self):
-        return reverse('tasks:task_detail', kwargs={'pk':self.pk})
+# DZ LIST ZADACH
+# class Task(models.Model):
+#     title = models.CharField('Название', max_length=200)
+#     description = models.TextField('Описание', blank=True)
+#     is_done = models.BooleanField('Выполнено', default=False)
+#     priority = models.IntegerField('Приоритет', default=1)
+#     created_at = models.DateTimeField('Создано', auto_now_add=True)
+#
+#     class Meta:
+#         ordering = ['is_done', '-priority', '-created_at']
+#         verbose_name = 'Задача'
+#         verbose_name_plural = 'Задачи'
+#
+#     def __str__(self):
+#         return self.title
+#
+#     def get_absolute_url(self):
+#         return reverse('tasks:task_detail', kwargs={'pk':self.pk})
