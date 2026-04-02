@@ -19,6 +19,7 @@ from rest_framework import status
 
 from bboard.forms import BbForm
 from bboard.models import Bb, Rubric
+# from bboard.models import Kiosk, Parent
 
 from .models import Task
 from .serializers import RubricSerializer, UserSerializer
@@ -291,6 +292,25 @@ class FirstUserView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['first_user'] = User.objects.first()
         return context
+
+#DZ 6 Models
+def kiosk_list(request):
+    kiosks = Kiosk.objects.all()
+    return render(request, 'kiosk_list.html', {'kiosks': kiosks})
+
+def kiosk_detail(request, kiosk_id):
+    kiosk = get_object_or_404(Kiosk, pk=kiosk_id)
+    return render(request, 'kiosk_detail.html', {'kiosk': kiosk})
+
+def parent_list(request):
+    parents = Parent.objects.all()
+    return render(request, 'parent_list.html', {'parents': parents})
+
+def parent_detail(request, parent_id):
+    parent = get_object_or_404(Parent, pk=parent_id)
+    return render(request, 'parent_detail', {'parent': parent})
+
+
 
 # def bb_detail(request, bb_id):
 #     bb = Bb.objects.get(pk=bb_id)

@@ -5,7 +5,7 @@ from bboard.models import Bb
 
 from bboard.views import (by_rubric, BbCreateView, add, add_save, add_and_save, bb_detail, logging_check, no_login,
                           BbRubricBbsView, IndexView, BbDetailView, BbDeleteView, FirstUserView, index, api_rubric,
-                          api_rubric_detail, api_create_user)
+                          api_rubric_detail, api_create_user, kiosk_detail)
 
 app_name = 'bboard'
 
@@ -41,7 +41,11 @@ urlpatterns = [
     #PR 12.03.26
     path('user/', FirstUserView.as_view(), name='first_user')
 
-    #dz
+    #DZ 6 Models
+    # path('kiosks/', kiosk_list, name='kiosk_list'),
+    # path('kiosks/<int:kiosk_id>/', kiosk_detail, name='kiosk_detail'),
+    # path('parents/', parent_list, name='parent_list'),
+    # path('parents/<int:parent_id>', parent_detail, name='parent_detail'),
 
     # practice
     # path('comments/', get_comments, name="get_comments"),

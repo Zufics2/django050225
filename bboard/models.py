@@ -2,6 +2,7 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
+from .validators import validate_positive_or_zero
 
 
 def validate_even(val):
@@ -137,6 +138,81 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
+#DZ 6 Models
+# class Kiosk(models.Model):
+#     name = models.CharField(max_length=100, verbose_name='Название киоска')
+#     address = models.CharField(max_length=200, verbose_name='Адрес')
+#
+#     def __str__(self):
+#         return self.name
+#
+#     def get_id_and_name(self):
+#         return f'ID: {self.id}, Название: {self.name}'
+#
+#     def total_icecream_price(self):
+#         return sum(ice_cream.price for ice_cream in self.ice_creams.all())
+#
+#
+# class IceCream(models.Model):
+#     kiosk = models.ForeignKey(
+#         Kiosk,
+#         on_delete=models.CASCADE,
+#         related_name='ice_creams',
+#         verbose_name='Киоск'
+#     )
+#     name = models.CharField(max_length=100, verbose_name='Название мороженого')
+#     flavor = models.CharField(max_length=100, verbose_name='Вкус')
+#     price = models.DecimalField(
+#         max_digits=6,
+#         decimal_places=2,
+#         verbose_name='Цена',
+#         validators=[validate_positive_or_zero]
+#     )
+#
+#     def __str__(self):
+#         return f'{self.name} - {self.flavor}'
+#
+#     def get_id_and_price(self):
+#         return f'ID: {self.id}, Цена: {self.price}'
+#
+#
+# class Parent(models.Model):
+#     first_name = models.CharField(max_length=100, verbose_name='Имя')
+#     last_name = models.CharField(max_length=100, verbose_name='Фамилия')
+#     age = models.PositiveIntegerField(
+#         verbose_name='Возраст',
+#         validators=[validate_positive_or_zero]
+#     )
+#
+#     def __str__(self):
+#         return f'{self.first_name} {self.last_name}'
+#
+#     def get_id_and_age(self):
+#         return f'ID: {self.id}, Возраст: {self.age}'
+#
+#     def total_children_age(self):
+#         return sum(child.age for child in self.children.all())
+#
+#
+# class Child(models.Model):
+#     parent = models.ForeignKey(
+#         Parent,
+#         on_delete=models.CASCADE,
+#         related_name='children',
+#         verbose_name='Родитель'
+#     )
+#     first_name = models.CharField(max_length=100, verbose_name='Имя')
+#     age = models.PositiveIntegerField(
+#         verbose_name='Возраст',
+#         validators=[validate_positive_or_zero]
+#     )
+#
+#     def __str__(self):
+#         return self.first_name
+#
+#     def get_id_and_age(self):
+#         return f'ID: {self.id}, Возраст: {self.age}'
 
 # DZ LIST ZADACH
 # class Task(models.Model):
