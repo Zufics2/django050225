@@ -1,20 +1,28 @@
-from django.urls import path
+from django.urls import path, include
 from django.urls import re_path
 from django.views.generic import CreateView
 from bboard.models import Bb
+from rest_framework.routers import DefaultRouter
 
 from bboard.views import (by_rubric, BbCreateView, add, add_save, add_and_save, bb_detail, logging_check, no_login,
                           BbRubricBbsView, IndexView, BbDetailView, BbDeleteView, FirstUserView, index, api_rubric,
-                          api_rubric_detail, api_create_user, kiosk_detail)
+                          api_rubric_detail, api_create_user, kiosk_detail, APIRubrics, APIRubricDetail, APIRubricViewSet, UserCreateAPIView)
 
 app_name = 'bboard'
 
+router = DefaultRouter()
+router.register('rubrics', APIRubricViewSet)
+
 urlpatterns = [
     ### DRF ###
-    path('api/v1/rubrics/<int:pk>/', api_rubric_detail),
-    path('api/v1/rubrics/', api_rubric),
+    # path('api/v1/rubrics/<int:pk>/', api_rubric_detail),
+    # path('api/v1/rubrics/', api_rubric),
+    # path('api/v1/rubrics/<int:pk>/', APIRubricDetail.as_view()),
+    # path('api/v1/rubrics/', APIRubrics.as_view()),\
+    path('api/v1/', include(router.urls)),
+
     #PR 30.03.26
-    path('api/v1/users/', api_create_user),
+    path('api/v1/users/', UserCreateAPIView.as_view()),
 
     path('add/', BbCreateView.as_view(), name='add'),
 

@@ -13,9 +13,14 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework import generics
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from bboard.forms import BbForm
 from bboard.models import Bb, Rubric
@@ -242,6 +247,7 @@ def api_rubric(request):
 
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes((IsAuthenticated,))
 def api_rubric_detail(request, pk):
     rubric = Rubric.objects.get(pk=pk)
 
@@ -259,6 +265,43 @@ def api_rubric_detail(request, pk):
     elif request.method == 'DELETE':
         rubric.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# class APIRubrics(APIView):
+#     def get(self, request):
+#         rubrics = Rubric.objects.all()
+#         serializer = RubricSerializer(rubrics, many=True)
+#         return Response(serializer.data)
+#
+#     def post(self, request):
+#         serializer = RubricSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class APIRubrics(generics.ListCreateAPIView):
+    queryset = Rubric.objects.all()
+    serializer_class = RubricSerializer
+
+class APIRubricDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Rubric.objects.all()
+    serializer_class = RubricSerializer
+
+# class APIRubricViewSet(ModelViewSet):
+#     queryset = Rubric.objects.all()
+#     serializer_class = RubricSerializer
+
+class APIRubricViewSet(ReadOnlyModelViewSet):
+    queryset = Rubric.objects.all()
+    serializer_class = RubricSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+# PR USER CREATE DRF
+class UserCreateAPIView(generics.CreateAPIView):
+    serializer_class = UserSerializer
+
+# PR USER GET USER LIST
+
 
 #PR 30.03.26
 @api_view(['POST'])
